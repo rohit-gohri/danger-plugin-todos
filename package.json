@@ -7,12 +7,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rohit-smpx/danger-plugin-todos.git"
+    "url": "https://github.com/rohit-gohri/danger-plugin-todos.git"
   },
   "bugs": {
-    "url": "https://github.com/rohit-smpx/danger-plugin-todos/issues"
+    "url": "https://github.com/rohit-gohri/danger-plugin-todos/issues"
   },
-  "homepage": "https://github.com/rohit-smpx/danger-plugin-todos#readme",
+  "homepage": "https://github.com/rohit-gohri/danger-plugin-todos#readme",
   "keywords": [
     "danger",
     "danger-plugin",
