@@ -10,15 +10,17 @@ function getCreatedOrModifiedFiles() {
   return [...danger.git.created_files, ...danger.git.modified_files]
 }
 
+export type GenerateRepoUrl = (filepath: string) => string
+
 /**
  * A danger-js plugin to list all todos/fixmes/etc added/changed in a PR
  */
 export default async function todos({
-  repoUrl = "",
+  repoUrl,
   ignore = [],
   keywords = ["TODO", "FIXME"],
 }: {
-  repoUrl?: string
+  repoUrl?: string | GenerateRepoUrl
   ignore?: Array<string | RegExp>
   keywords?: string[]
 } = {}) {
@@ -52,15 +54,22 @@ export default async function todos({
       keywords.forEach(keyword => {
         const regex = new RegExp(`(?:\/\/|#|<!--|;|\/\*|^|\/\*\*\s*\**)\s*${keyword.trim()}(?::\s*|\s+)(.+)`, "gi")
         const matches = diff.added.match(regex)
-        const srcLink = repoUrl
-          ? `[\`${filepath}\`](${repoUrl}/blob/${danger.git.commits[0].sha}/${filepath})`
-          : `\`${filepath}\``
-
-        if (matches) {
-          matches.forEach(match => {
-            keywordMatches[keyword].push(`\`\`${match}\`\` : ${srcLink}`)
-          })
+        if (!matches || !matches.length) {
+          return
         }
+
+        let srcLink = `\`${filepath}\``
+
+        // Github url
+        if (typeof repoUrl === "string") {
+          srcLink = `[${filepath}](${repoUrl}/blob/${danger.git.commits[0].sha}/${filepath})`
+        } else if (typeof repoUrl === "function") {
+          srcLink = `[${filepath}](${repoUrl(filepath)})`
+        }
+
+        matches.forEach(match => {
+          keywordMatches[keyword].push(`\`\`${match}\`\` : ${srcLink}`)
+        })
       })
     })
   )
@@ -76,6 +85,5 @@ export default async function todos({
     return
   }
 
-  markdown(`### ${keywords.join("s/")}s:
-- ${output.join("\n- ")}`)
+  markdown(`### ${keywords.join("s/")}s:\n- ${output.join("\n- ")}`)
 }
