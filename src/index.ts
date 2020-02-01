@@ -12,6 +12,53 @@ function getCreatedOrModifiedFiles() {
 
 export type GenerateRepoUrl = (filepath: string) => string
 
+export type RepoUrl = string | GenerateRepoUrl
+
+export type IgnorePatterns = Array<string | RegExp>
+
+interface PlainObject<T> {
+  [key: string]: T
+}
+
+export function shouldIgnoreFile(filepath: string, ignore: IgnorePatterns) {
+  for (const ignorePath of ignore) {
+    if (!Object.prototype.hasOwnProperty.call(ignorePath, shouldIgnoreFile)) {
+      continue
+    }
+
+    if (ignorePath instanceof RegExp && ignorePath.test(filepath)) {
+      return true
+    } else if (typeof ignorePath === "string" && filepath.includes(ignorePath)) {
+      return true
+    }
+  }
+  return false
+}
+
+export function getMatches(diffString: string, keyword: string) {
+  if (!diffString) {
+    return []
+  }
+
+  const regex = new RegExp(`(?:\/\/|#|<!--|;|\/\*|^|\/\*\*\s*\**)\s*${keyword.trim()}(?::\s*|\s+)(.+)`, "gi")
+  const matches = diffString.match(regex)
+  if (!matches || !matches.length) {
+    return []
+  }
+  return matches
+}
+
+export function getFormattedSrcLink(filepath: string, repoUrl?: RepoUrl) {
+  let srcLink = `\`${filepath}\``
+  // Github url
+  if (typeof repoUrl === "string") {
+    srcLink = `[${filepath}](${repoUrl}/blob/${danger.git.commits[0].sha}/${filepath})`
+  } else if (typeof repoUrl === "function") {
+    srcLink = `[${filepath}](${repoUrl(filepath)})`
+  }
+  return srcLink
+}
+
 /**
  * A danger-js plugin to list all todos/fixmes/etc added/changed in a PR
  */
@@ -20,11 +67,11 @@ export default async function todos({
   ignore = [],
   keywords = ["TODO", "FIXME"],
 }: {
-  repoUrl?: string | GenerateRepoUrl
-  ignore?: Array<string | RegExp>
+  repoUrl?: RepoUrl
+  ignore?: IgnorePatterns
   keywords?: string[]
 } = {}) {
-  const keywordMatches: { [key: string]: string[] } = {}
+  const keywordMatches: PlainObject<string[]> = {}
 
   keywords.forEach(keyword => {
     keywordMatches[keyword] = []
@@ -32,16 +79,7 @@ export default async function todos({
 
   await Promise.all(
     getCreatedOrModifiedFiles().map(async filepath => {
-      let ignoreFile = false
-      ignore.forEach(ignorePath => {
-        if (typeof ignorePath === "string" && filepath.includes(ignorePath)) {
-          ignoreFile = true
-        } else if (ignorePath instanceof RegExp && ignorePath.test(filepath)) {
-          ignoreFile = true
-        }
-      })
-
-      if (ignoreFile) {
+      if (shouldIgnoreFile(filepath, ignore)) {
         return
       }
 
@@ -52,20 +90,8 @@ export default async function todos({
       }
 
       keywords.forEach(keyword => {
-        const regex = new RegExp(`(?:\/\/|#|<!--|;|\/\*|^|\/\*\*\s*\**)\s*${keyword.trim()}(?::\s*|\s+)(.+)`, "gi")
-        const matches = diff.added.match(regex)
-        if (!matches || !matches.length) {
-          return
-        }
-
-        let srcLink = `\`${filepath}\``
-
-        // Github url
-        if (typeof repoUrl === "string") {
-          srcLink = `[${filepath}](${repoUrl}/blob/${danger.git.commits[0].sha}/${filepath})`
-        } else if (typeof repoUrl === "function") {
-          srcLink = `[${filepath}](${repoUrl(filepath)})`
-        }
+        const matches = getMatches(diff.added, keyword)
+        const srcLink = getFormattedSrcLink(filepath, repoUrl)
 
         matches.forEach(match => {
           keywordMatches[keyword].push(`\`\`${match}\`\` : ${srcLink}`)
