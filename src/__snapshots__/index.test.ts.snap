@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`todos() getMatches should match comment 1`] = `
+Array [
+  "/**
+         * TODO: Should match",
+]
+`;
+
+exports[`todos() getMatches should match different comment styles 1`] = `
+Array [
+  "/**
+         * TODO: Should match",
+]
+`;
+
+exports[`todos() getMatches should match different comment styles 2`] = `
+Array [
+  "// TODO: Should match",
+]
+`;
+
+exports[`todos() getMatches should match different comment styles 3`] = `
+Array [
+  "# TODO: Should match",
+]
+`;
