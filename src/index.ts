@@ -1,3 +1,4 @@
+import { escapeRegExp } from "lodash"
 // Provides dev-time type structures for  `danger` - doesn't affect runtime.
 import { DangerDSLType } from "../node_modules/danger/distribution/dsl/DangerDSL"
 declare var danger: DangerDSLType
@@ -39,8 +40,12 @@ export function getMatches(diffString: string, keyword: string) {
   if (!diffString) {
     return []
   }
+  const escapedKeyword = escapeRegExp(keyword)
 
-  const regex = new RegExp(`(?:\/\/|#|<!--|;|\/\*|^|\/\*\*\s*\**)\s*${keyword.trim()}(?::\s*|\s+)(.+)`, "gi")
+  const regex = new RegExp(
+    `(?:\\/\\/|#|<!--|;|\\/\\*|^|\\/\\*\\*\\s*\\**)\\s*${escapedKeyword}(?::\\s*|\\s+)(.+)`,
+    "gi"
+  )
   const matches = diffString.match(regex)
   if (!matches || !matches.length) {
     return []
