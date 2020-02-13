@@ -34,7 +34,7 @@ jobs:
         CI: true
 
     - name: release
-      if: github.ref == 'master'
+      if: github.ref == 'refs/heads/master'
       run: |
         yarn semantic-release
       env:
