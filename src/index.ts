@@ -15,7 +15,7 @@ export type GenerateRepoUrl = (filepath: string) => string
 
 export type RepoUrl = string | GenerateRepoUrl
 
-export type IgnorePatterns = Array<string | RegExp>
+export type IgnorePatterns = (string | RegExp)[]
 
 interface PlainObject<T> {
   [key: string]: T
@@ -44,7 +44,7 @@ export function getMatches(diffString: string, keyword: string) {
 
   const regex = new RegExp(
     `(?:\\/\\/|#|<!--|;|\\/\\*|^|\\/\\*\\*\\s*\\**)\\s*${escapedKeyword}(?::\\s*|\\s+)(.+)`,
-    "gi"
+    "gi",
   )
   const matches = diffString.match(regex)
   if (!matches || !matches.length) {
@@ -74,7 +74,7 @@ export default async function todos({
 }: {
   repoUrl?: RepoUrl
   ignore?: IgnorePatterns
-  keywords?: string[]
+  keywords?: string[],
 } = {}) {
   const keywordMatches: PlainObject<string[]> = {}
 
@@ -88,21 +88,35 @@ export default async function todos({
         return
       }
 
-      const diff = await danger.git.diffForFile(filepath)
+      let text: string = ''
 
-      if (!diff) {
+      try {
+        const diff = await danger.git.diffForFile(filepath)
+        if (diff) text = diff.added
+      }
+      catch (err) {
+        if (danger.gitlab) {
+          // Could not get diff, will be using full file
+          text = await danger.gitlab.utils.fileContents(filepath)
+        }
+        else {
+          throw err
+        }
+      }
+
+      if (!text) {
         return
       }
 
       keywords.forEach(keyword => {
-        const matches = getMatches(diff.added, keyword)
+        const matches = getMatches(text, keyword)
         const srcLink = getFormattedSrcLink(filepath, repoUrl)
 
         matches.forEach(match => {
           keywordMatches[keyword].push(`\`\`${match}\`\` : ${srcLink}`)
         })
       })
-    })
+    }),
   )
 
   const output: string[] = []
