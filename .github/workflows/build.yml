@@ -1,0 +1,59 @@
+name: Build
+
+on:
+- push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    - name: install
+      run: |
+        yarn
+      env:
+        CI: true
+
+    - name: test
+      run: |
+        yarn test
+      env:
+        NODE_ENV: test
+        CI: true
+
+    - name: build
+      run: |
+        yarn build
+      env:
+        CI: true
+
+  publish:
+    if: github.branches == 'master'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    - name: install
+      run: |
+        yarn
+      env:
+        CI: true
+
+    - name: release
+      run: |
+        yarn semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        CI: true
