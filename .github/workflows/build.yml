@@ -33,24 +33,8 @@ jobs:
       env:
         CI: true
 
-  publish:
-    if: github.branches == 'master'
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-
-    - name: Use Node.js 12.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-
-    - name: install
-      run: |
-        yarn
-      env:
-        CI: true
-
     - name: release
+      if: github.ref == 'master'
       run: |
         yarn semantic-release
       env:
