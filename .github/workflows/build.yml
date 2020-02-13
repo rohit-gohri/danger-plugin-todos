@@ -18,20 +18,20 @@ jobs:
       run: |
         yarn
       env:
-        CI: true
+        CI: 1
 
     - name: test
       run: |
         yarn test
       env:
         NODE_ENV: test
-        CI: true
+        CI: 1
 
     - name: build
       run: |
         yarn build
       env:
-        CI: true
+        CI: 1
 
     - name: release
       if: github.ref == 'refs/heads/master'
@@ -40,4 +40,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        CI: true
+        CI: 1
