@@ -18,9 +18,29 @@ At a glance:
 
 ```js
 // dangerfile.js
+import { schedule } from 'danger'
 import todos from 'danger-plugin-todos'
 
-todos()
+// Using schedule because this is an async task
+schedule(todos())
+
+
+// Optionally provide options
+schedule(todos({
+    ignore: ['CHANGELOG.md', /test/], // Any files to ignore, can be part of filename or regex pattern to match (default: [])
+    keywords: ['TODO', 'FIXME', 'TO-DO'], // Keywords to find (default: ['TODO', 'FIXME'])
+    repoUrl: 'https://github.com/rohit-gohri/danger-plugin-todos', // If using github provide the repo url (default: true - tries picks from package.json -> repository.url)
+}))
+
+
+// For other git providers (that don't follow github style links for files) provide a custom function to turn filepaths into links for the specific commit
+schedule(todos({
+    repoUrl: (filepath) => `https://custom-git-example.com/rohit-gohri/danger-plugin-todos/tree/${danger.git.commits[0].sha}/${filepath}`,
+}))
+
+schedule(todos({
+    repoUrl: false, // for using simple filepaths without links
+}))
 ```
 
 ## Changelog
