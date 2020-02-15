@@ -13,7 +13,7 @@ function getCreatedOrModifiedFiles() {
 
 export type GenerateRepoUrl = (filepath: string) => string
 
-export type RepoUrl = string | GenerateRepoUrl
+export type RepoUrl = string | GenerateRepoUrl | boolean
 
 export type IgnorePatterns = (string | RegExp)[]
 
@@ -55,6 +55,15 @@ export function getMatches(diffString: string, keyword: string) {
 
 export function getFormattedSrcLink(filepath: string, repoUrl?: RepoUrl) {
   let srcLink = `\`${filepath}\``
+  if (repoUrl === true) {
+    try {
+      const packageFile = require(`${process.cwd()}/package.json`)
+      repoUrl = packageFile.repository.url.replace(/\.git$/, '')
+    }
+    catch (err) {
+      //
+    }
+  }
   // Github url
   if (typeof repoUrl === "string") {
     srcLink = `[${filepath}](${repoUrl}/blob/${danger.git.commits[0].sha}/${filepath})`
@@ -68,7 +77,7 @@ export function getFormattedSrcLink(filepath: string, repoUrl?: RepoUrl) {
  * A danger-js plugin to list all todos/fixmes/etc added/changed in a PR
  */
 export default async function todos({
-  repoUrl,
+  repoUrl = true,
   ignore = [],
   keywords = ["TODO", "FIXME"],
 }: {
