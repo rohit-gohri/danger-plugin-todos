@@ -12,6 +12,8 @@ Install:
 
 ```sh
 yarn add danger-plugin-todos --dev
+# OR
+npm i --save-dev danger-plugin-todos
 ```
 
 At a glance:
@@ -29,7 +31,7 @@ schedule(todos())
 schedule(todos({
     ignore: ['CHANGELOG.md', /test/], // Any files to ignore, can be part of filename or regex pattern to match (default: [])
     keywords: ['TODO', 'FIXME', 'TO-DO'], // Keywords to find (default: ['TODO', 'FIXME'])
-    repoUrl: 'https://github.com/rohit-gohri/danger-plugin-todos', // If using github provide the repo url (default: true - tries picks from package.json -> repository.url)
+    repoUrl: 'https://github.com/rohit-gohri/danger-plugin-todos', // If using github provide the repo url (default: true - tries to pick from package.json -> repository.url)
 }))
 
 
@@ -42,6 +44,15 @@ schedule(todos({
     repoUrl: false, // for using simple filepaths without links
 }))
 ```
+
+Preview:
+
+<!-- TODO: Add github example -->
+<!-- #### Github -->
+
+#### Gitlab
+
+![gitlab example](./gitlab-example.png)
 
 ## Changelog
 

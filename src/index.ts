@@ -64,7 +64,7 @@ export function getFormattedSrcLink(filepath: string, repoUrl?: RepoUrl) {
       //
     }
   }
-  // Github url
+  // Github style url
   if (typeof repoUrl === "string") {
     srcLink = `[${filepath}](${repoUrl}/blob/${danger.git.commits[0].sha}/${filepath})`
   } else if (typeof repoUrl === "function") {
