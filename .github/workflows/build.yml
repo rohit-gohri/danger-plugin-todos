@@ -37,7 +37,7 @@ jobs:
       env:
         NODE_ENV: test
         CI: 1
-        DANGER_GITHUB_API_TOKEN: ${{ secrets.DANGER_GITHUB_API_TOKEN }}        
+        DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
 
     - name: build
       run: |
