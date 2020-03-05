@@ -35,9 +35,13 @@ jobs:
       run: |
         yarn danger ci
       env:
-        NODE_ENV: test
-        CI: 1
-        DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+        DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Danger JS Action
+      if: github.event_name == 'pull_request'
+      uses: danger/danger-js@9.1.8
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: build
       run: |
