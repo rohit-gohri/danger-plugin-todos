@@ -1,7 +1,10 @@
 name: Build
 
 on:
-- push
+  - push:
+      branches:
+        - master
+  - pull_request
 
 jobs:
   build:
@@ -27,6 +30,14 @@ jobs:
         NODE_ENV: test
         CI: 1
 
+    - name: danger
+      if: github.event_name == 'pull_request'
+      run: |
+        yarn danger ci
+      env:
+        NODE_ENV: test
+        CI: 1
+
     - name: build
       run: |
         yarn build
@@ -34,7 +45,7 @@ jobs:
         CI: 1
 
     - name: release
-      if: github.ref == 'refs/heads/master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: |
         yarn semantic-release
       env:
