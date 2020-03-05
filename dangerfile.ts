@@ -5,8 +5,6 @@ async function main() {
   await todos({
     keywords: ['TODO', 'FIXME', 'WTF'],
   })
-
-  warn('test')
 }
 
 schedule(main())
