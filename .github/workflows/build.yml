@@ -33,9 +33,16 @@ jobs:
     - name: danger
       if: github.event_name == 'pull_request'
       run: |
-        yarn danger ci
+        yarn danger ci -i gh
       env:
         DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: danger2
+      if: github.event_name == 'pull_request'
+      run: |
+        yarn danger ci -i api
+      env:
+        DANGER_GITHUB_API_TOKEN: ${{ secrets.DANGER_GITHUB_API_TOKEN }}
 
     - name: Danger JS Action
       if: github.event_name == 'pull_request'
