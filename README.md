@@ -10,7 +10,7 @@
 
 ## Usage
 
-Install:
+### Install
 
 ```sh
 yarn add danger-plugin-todos --dev
@@ -18,7 +18,7 @@ yarn add danger-plugin-todos --dev
 npm i --save-dev danger-plugin-todos
 ```
 
-At a glance:
+### At a glance
 
 ```js
 // dangerfile.js
@@ -47,7 +47,7 @@ schedule(todos({
 }))
 ```
 
-Preview:
+### Results Preview
 
 <!-- TODO: Add github example -->
 <!-- #### Github -->
