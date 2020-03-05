@@ -1,10 +1,10 @@
 name: Build
 
 on:
-  - push:
-      branches:
-        - master
-  - pull_request
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   build:
@@ -37,6 +37,7 @@ jobs:
       env:
         NODE_ENV: test
         CI: 1
+        DANGER_GITHUB_API_TOKEN: ${{ secrets.DANGER_GITHUB_API_TOKEN }}        
 
     - name: build
       run: |
