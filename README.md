@@ -49,8 +49,9 @@ schedule(todos({
 
 ### Results Preview
 
-<!-- TODO: Add github example -->
-<!-- #### Github -->
+#### Github
+
+![github example](./github-example.png)
 
 #### Gitlab
 
