@@ -18,3 +18,27 @@ Array [
   "# TODO: Should match",
 ]
 `;
+
+exports[`todos() getMatches should match different comment styles 4`] = `
+Array [
+  "-- BUGBUG: Should match elm style",
+]
+`;
+
+exports[`todos() getMatches should match different comment styles 5`] = `
+Array [
+  "-- bugbug: Should match elm style",
+]
+`;
+
+exports[`todos() getMatches should match different comment styles 6`] = `
+Array [
+  "-- fixme: Should match elm style",
+]
+`;
+
+exports[`todos() getMatches should match different comment styles 7`] = `
+Array [
+  "-- TODO: Should match elm style",
+]
+`;
