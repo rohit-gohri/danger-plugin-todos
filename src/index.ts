@@ -79,7 +79,7 @@ export function getFormattedSrcLink(filepath: string, repoUrl?: RepoUrl) {
 export default async function todos({
   repoUrl = true,
   ignore = [],
-  keywords = ["TODO", "FIXME", "BUGBUG"],
+  keywords = ["TODO", "FIXME"],
 }: {
   repoUrl?: RepoUrl
   ignore?: IgnorePatterns
