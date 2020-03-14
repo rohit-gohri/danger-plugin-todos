@@ -1,4 +1,4 @@
-import todos, { getFormattedSrcLink, getMatches, shouldIgnoreFile } from "./index"
+import todos, { getMatches } from "./index"
 
 declare const global: any
 
@@ -28,7 +28,7 @@ describe("todos()", () => {
          */
         function testcode() { return 'Do nothing'; };
       `,
-        keyword
+        keyword,
       )
       expect(matches).toMatchObject([])
 
@@ -48,7 +48,7 @@ describe("todos()", () => {
          */
         function testcode() { return 'Do nothing'; };
       `,
-        keyword
+        keyword,
       )
       expect(matches).toMatchSnapshot()
 
@@ -57,7 +57,7 @@ describe("todos()", () => {
         // TODO: Should match
         function testcode() { return 'Do nothing'; };
       `,
-        keyword
+        keyword,
       )
       expect(matches).toMatchSnapshot()
 
@@ -66,9 +66,77 @@ describe("todos()", () => {
       # TODO: Should match
       function testcode() { return 'Do nothing'; };
     `,
-        keyword
+        keyword,
       )
+      expect(matches.length).toBe(1)
+      expect(matches).toMatchSnapshot()
 
+      matches = getMatches(
+        `
+        -- BUGBUG: Should match elm style
+        view : Page.View Taco Model (Page.Msg Msg)
+        view =
+            { body = body
+            , modals =
+                Page.noModals
+            , title = always "Add Custom People"
+            , sideOverlay = Nothing
+            }
+        `,
+        'BUGBUG',
+      )
+      expect(matches.length).toBe(1)
+      expect(matches).toMatchSnapshot()
+
+      matches = getMatches(
+        `
+        -- bugbug: Should match elm style
+        view : Page.View Taco Model (Page.Msg Msg)
+        view =
+            { body = body
+            , modals =
+                Page.noModals
+            , title = always "Add Custom People"
+            , sideOverlay = Nothing
+            }
+        `,
+        'bugbug',
+      )
+      expect(matches.length).toBe(1)
+      expect(matches).toMatchSnapshot()
+
+      matches = getMatches(
+        `
+        -- fixme: Should match elm style
+        view : Page.View Taco Model (Page.Msg Msg)
+        view =
+            { body = body
+            , modals =
+                Page.noModals
+            , title = always "Add Custom People"
+            , sideOverlay = Nothing
+            }
+        `,
+        'fixme',
+      )
+      expect(matches.length).toBe(1)
+      expect(matches).toMatchSnapshot()
+
+      matches = getMatches(
+        `
+        -- TODO: Should match elm style
+        view : Page.View Taco Model (Page.Msg Msg)
+        view =
+            { body = body
+            , modals =
+                Page.noModals
+            , title = always "Add Custom People"
+            , sideOverlay = Nothing
+            }
+        `,
+        keyword,
+      )
+      expect(matches.length).toBe(1)
       expect(matches).toMatchSnapshot()
     })
   })

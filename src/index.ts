@@ -43,7 +43,7 @@ export function getMatches(diffString: string, keyword: string) {
   const escapedKeyword = escapeRegExp(keyword)
 
   const regex = new RegExp(
-    `(?:\\/\\/|#|<!--|;|\\/\\*|^|\\/\\*\\*\\s*\\**)\\s*${escapedKeyword}(?::\\s*|\\s+)(.+)`,
+    `(?:\\/\\/|#|<!--|;|\\/\\*|^|\\--|\\/\\*\\*\\s*\\**)\\s*${escapedKeyword}(?::\\s*|\\s+)(.+)`,
     "gi",
   )
   const matches = diffString.match(regex)
