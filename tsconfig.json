@@ -7,6 +7,8 @@
         "allowJs": false,
         "pretty": true,
         "strictNullChecks": true,
+        "declarationMap": true,
+        "declarationDir": "types",
         "declaration": true
     },
     "lib":[
@@ -20,6 +22,7 @@
     ],
     "exclude": [
         "dangerfile.ts",
+        "./**/*.test.ts",
         "node_modules",
         "dist"
     ]
