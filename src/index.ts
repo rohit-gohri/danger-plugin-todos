@@ -23,10 +23,6 @@ interface PlainObject<T> {
 
 export function shouldIgnoreFile(filepath: string, ignore: IgnorePatterns) {
   for (const ignorePath of ignore) {
-    if (!Object.prototype.hasOwnProperty.call(ignorePath, shouldIgnoreFile)) {
-      continue
-    }
-
     if (ignorePath instanceof RegExp && ignorePath.test(filepath)) {
       return true
     } else if (typeof ignorePath === "string" && filepath.includes(ignorePath)) {

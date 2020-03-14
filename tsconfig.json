@@ -9,7 +9,8 @@
         "strictNullChecks": true,
         "declarationMap": true,
         "declarationDir": "types",
-        "declaration": true
+        "declaration": true,
+        "strict": true
     },
     "lib":[
         "es2017",
