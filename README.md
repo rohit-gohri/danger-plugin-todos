@@ -6,9 +6,15 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![License](https://img.shields.io/github/license/rohit-gohri/danger-plugin-todos)](https://github.com/rohit-gohri/danger-plugin-todos/blob/master/LICENSE.md)
 
-> A danger-js plugin to list all todos/fixmes/etc added/changed in a PR
+A [danger-js](https://danger.systems/js/) plugin to list all todos/fixmes/etc added/changed in a PR.
+
+## Intro to Danger
+
+Danger is a tool to automate common code review practices. It can run as part of your CI pipeline and help maintain standards. Check out their github repo at [danger/danger-js](https://github.com/danger/danger-js). You can configure it using a `dangerfile`, which is a javscript or typescript file in the root of your project. It'll post it's results as a comment in the PRs of your project.
 
 ## Usage
+
+To use you must already have `danger-js` set up in your repo. 
 
 ### Install
 
