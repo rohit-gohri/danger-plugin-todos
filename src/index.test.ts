@@ -144,16 +144,16 @@ describe("todos()", () => {
   describe("prepareTodosForDanger()", () => {
     it("should return added todo's", () => {
       const keywordMatches = {"TODO": []}
-      prepareTodosForDanger(["TODO"], "TODO: Added", "", "file.md", ()=>"https://example.com", keywordMatches)
+      const matches = prepareTodosForDanger(["TODO"], "TODO: Added", "", "file.md", ()=>"https://example.com", keywordMatches)
 
       expect(keywordMatches).toStrictEqual({"TODO": ["``TODO: Added``: [file.md](https://example.com)"]})
     })
 
     it("should return removed todo's", () => {
       const keywordMatches = {"TODO": []}
-      prepareTodosForDanger(["TODO"], "", "TODO: Removed", "file.md", ()=>"https://example.com", keywordMatches)
+      const matches = prepareTodosForDanger(["TODO"], "", "TODO: Removed", "file.md", ()=>"https://example.com", keywordMatches)
 
-      expect(keywordMatches).toStrictEqual({"TODO": ["~~TODO: Removed~~: [file.md](https://example.com)"]})
+      expect(matches).toStrictEqual({"TODO": ["~~TODO: Removed~~: [file.md](https://example.com)"]})
     })
   })
 
