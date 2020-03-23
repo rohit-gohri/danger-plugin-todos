@@ -1,4 +1,4 @@
-import { escapeRegExp } from "lodash"
+import { escapeRegExp, merge } from "lodash"
 // Provides dev-time type structures for  `danger` - doesn't affect runtime.
 import { DangerDSLType } from "../node_modules/danger/distribution/dsl/DangerDSL"
 declare var danger: DangerDSLType
@@ -69,20 +69,22 @@ export function getFormattedSrcLink(filepath: string, repoUrl?: RepoUrl) {
   return srcLink
 }
 
-export function prepareTodosForDanger(keywords: string[] | undefined, addedText: string, removedText: string, filepath: string, repoUrl: RepoUrl, keywordMatches: PlainObject<string[]>) {
+export function prepareTodosForDanger(keywords: string[] | undefined, addedText: string, removedText: string, filepath: string, repoUrl: RepoUrl, keywordMatches: PlainObject<string[]>): PlainObject<string[]> | undefined  {
   if (keywords === undefined) return
+  const result = keywordMatches
   keywords.forEach(keyword => {
     const addedMatches = getMatches(addedText, keyword)
     const removedMatches = getMatches(removedText, keyword)
     const srcLink = getFormattedSrcLink(filepath, repoUrl)
 
     addedMatches.forEach(match => {
-      keywordMatches[keyword].push(`\`\`${match}\`\`: ${srcLink}`)
+      result[keyword].push(`\`\`${match}\`\`: ${srcLink}`)
     })
     removedMatches.forEach(match => {
-      keywordMatches[keyword].push(`~~${match}~~: ${srcLink}`)
+      result[keyword].push(`~~${match}~~: ${srcLink}`)
     })
   })
+  return result
 }
 
 /**
@@ -103,7 +105,7 @@ export default async function todos({
     keywordMatches[keyword] = []
   })
 
-  await Promise.all(
+  const results = await Promise.all(
     getCreatedOrModifiedFiles().map(async filepath => {
       if (shouldIgnoreFile(filepath, ignore)) {
         return
@@ -132,12 +134,13 @@ export default async function todos({
       if (!addedText || !removedText) {
         return
       }
-      prepareTodosForDanger(keywords, addedText, removedText, filepath, repoUrl, keywordMatches)
+      return prepareTodosForDanger(keywords, addedText, removedText, filepath, repoUrl, keywordMatches)
     }),
   )
+  const mergedKeywordMatches: PlainObject<string[]> = merge(keywordMatches, ...results)
 
   const output: string[] = []
-  Object.values(keywordMatches).forEach(matches => {
+  Object.values(mergedKeywordMatches).forEach(matches => {
     if (matches.length) {
       output.push(...matches)
     }
