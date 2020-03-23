@@ -124,7 +124,9 @@ export default async function todos({
       catch (err) {
         if (danger.gitlab) {
           // Could not get diff, will be using full file
-          addedText = await danger.gitlab.utils.fileContents(filepath)
+          const fileContent = await danger.gitlab.utils.fileContents(filepath)
+          addedText = fileContent
+          removedText = fileContent
         }
         else {
           throw err
