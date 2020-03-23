@@ -6,7 +6,7 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![License](https://img.shields.io/github/license/rohit-gohri/danger-plugin-todos)](https://github.com/rohit-gohri/danger-plugin-todos/blob/master/LICENSE.md)
 
-A [danger-js](https://danger.systems/js/) plugin to list all todos/fixmes/etc added/changed in a PR.
+A [danger-js](https://danger.systems/js/) plugin to list all todos/fixmes/etc added/changed/removed in a PR.
 
 ## Intro to Danger
 

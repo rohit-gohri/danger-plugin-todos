@@ -69,6 +69,22 @@ export function getFormattedSrcLink(filepath: string, repoUrl?: RepoUrl) {
   return srcLink
 }
 
+export function prepareTodosForDanger(keywords: string[] | undefined, addedText: string, removedText: string, filepath: string, repoUrl: string | ((filepath: string) => string) | undefined | boolean, keywordMatches: PlainObject<string[]>) {
+  if (keywords === undefined) return
+  keywords.forEach(keyword => {
+    const addedMatches = getMatches(addedText, keyword)
+    const removedMatches = getMatches(removedText, keyword)
+    const srcLink = getFormattedSrcLink(filepath, repoUrl)
+
+    addedMatches.forEach(match => {
+      keywordMatches[keyword].push(`\`\`${match}\`\`: ${srcLink}`)
+    })
+    removedMatches.forEach(match => {
+      keywordMatches[keyword].push(`~~${match}~~: ${srcLink}`)
+    })
+  })
+}
+
 /**
  * A danger-js plugin to list all todos/fixmes/etc added/changed in a PR
  */
@@ -93,34 +109,30 @@ export default async function todos({
         return
       }
 
-      let text: string = ''
+      let addedText: string = ''
+      let removedText: string = ''
 
       try {
         const diff = await danger.git.diffForFile(filepath)
-        if (diff) text = diff.added
+        if (diff) {
+          addedText = diff.added
+          removedText = diff.removed
+        }
       }
       catch (err) {
         if (danger.gitlab) {
           // Could not get diff, will be using full file
-          text = await danger.gitlab.utils.fileContents(filepath)
+          addedText = await danger.gitlab.utils.fileContents(filepath)
         }
         else {
           throw err
         }
       }
 
-      if (!text) {
+      if (!addedText || !removedText) {
         return
       }
-
-      keywords.forEach(keyword => {
-        const matches = getMatches(text, keyword)
-        const srcLink = getFormattedSrcLink(filepath, repoUrl)
-
-        matches.forEach(match => {
-          keywordMatches[keyword].push(`\`\`${match}\`\` : ${srcLink}`)
-        })
-      })
+      prepareTodosForDanger(keywords, addedText, removedText, filepath, repoUrl, keywordMatches)
     }),
   )
 

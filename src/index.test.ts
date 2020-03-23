@@ -1,4 +1,4 @@
-import todos, { getMatches } from "./index"
+import todos, {getMatches, prepareTodosForDanger} from "./index"
 
 declare const global: any
 
@@ -138,6 +138,22 @@ describe("todos()", () => {
       )
       expect(matches.length).toBe(1)
       expect(matches).toMatchSnapshot()
+    })
+  })
+
+  describe("prepareTodosForDanger()", () => {
+    it("should return added todo's", () => {
+      const keywordMatches = {"TODO": []}
+      prepareTodosForDanger(["TODO"], "TODO: Added", "", "file.md", ()=>"https://example.com", keywordMatches)
+
+      expect(keywordMatches).toStrictEqual({"TODO": ["``TODO: Added``: [file.md](https://example.com)"]})
+    })
+
+    it("should return removed todo's", () => {
+      const keywordMatches = {"TODO": []}
+      prepareTodosForDanger(["TODO"], "", "TODO: Removed", "file.md", ()=>"https://example.com", keywordMatches)
+
+      expect(keywordMatches).toStrictEqual({"TODO": ["~~TODO: Removed~~: [file.md](https://example.com)"]})
     })
   })
 
