@@ -69,7 +69,7 @@ export function getFormattedSrcLink(filepath: string, repoUrl?: RepoUrl) {
   return srcLink
 }
 
-export function prepareTodosForDanger(keywords: string[] | undefined, addedText: string, removedText: string, filepath: string, repoUrl: string | ((filepath: string) => string) | undefined | boolean, keywordMatches: PlainObject<string[]>) {
+export function prepareTodosForDanger(keywords: string[] | undefined, addedText: string, removedText: string, filepath: string, repoUrl: RepoUrl, keywordMatches: PlainObject<string[]>) {
   if (keywords === undefined) return
   keywords.forEach(keyword => {
     const addedMatches = getMatches(addedText, keyword)
