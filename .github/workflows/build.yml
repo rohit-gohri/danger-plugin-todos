@@ -10,44 +10,44 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v1
 
-    - name: Use Node.js 12.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
 
-    - name: install
-      run: |
-        yarn
-      env:
-        CI: 1
+      - name: install
+        run: |
+          yarn
+        env:
+          CI: 1
 
-    - name: test
-      run: |
-        yarn test
-      env:
-        NODE_ENV: test
-        CI: 1
+      - name: test
+        run: |
+          yarn test
+        env:
+          NODE_ENV: test
+          CI: 1
 
-    - name: danger
-      if: github.event_name == 'pull_request'
-      run: |
-        yarn danger ci
-      env:
-        DANGER_GITHUB_API_TOKEN: ${{ secrets.DANGER_GITHUB_API_TOKEN }}
+      - name: danger
+        if: github.event_name == 'pull_request'
+        run: |
+          yarn danger ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: build
-      run: |
-        yarn build
-      env:
-        CI: 1
+      - name: build
+        run: |
+          yarn build
+        env:
+          CI: 1
 
-    - name: release
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: |
-        yarn semantic-release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        CI: 1
+      - name: release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: |
+          yarn semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          CI: 1
