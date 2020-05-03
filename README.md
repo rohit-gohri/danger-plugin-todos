@@ -63,6 +63,12 @@ schedule(todos({
 
 ![gitlab example](./gitlab-example.png)
 
+#### Bitbucket
+
+This is an example for #4
+
+![bitbucket example](./bitbucket-example.png)
+
 ## Changelog
 
 See the GitHub [release history](https://github.com/rohit-gohri/danger-plugin-todos/releases).
