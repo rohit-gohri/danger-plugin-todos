@@ -57,6 +57,9 @@
     "typescript": "^3.8.3",
     "validate-commit-msg": "^2.14.0"
   },
+  "release": {
+    "branches": ["main"]
+  },
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
